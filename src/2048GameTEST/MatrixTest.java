@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 // THIS IS ONLY A TEST FILE FOR MY 2048 PROJECT
 
@@ -53,7 +56,7 @@ public class MatrixTest {
         // draw an arrow pointing to the LEFT
         // tilt the paper again back to the RIGHT
         // the arrow will point upwards
-        // yeah, this is how the movements work
+        // yeah, this is how the movements wor
 
         for (int[] arr : matrix) {
             // this will be used to determine where
@@ -156,15 +159,42 @@ public class MatrixTest {
         leftMove(matrix);
         tiltMatrixToLeft(matrix);
     }
+    static void insertRandomTile(int[][] matrix) {
+
+        List<int[]> emptyTiles = new ArrayList<>();
+        // a dynamic array that stores the coordinates of
+        // each empty tile
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (matrix[i][j] == 0) {
+                    emptyTiles.add(new int[]{i, j});
+                }
+            }
+        }
+
+        if (!emptyTiles.isEmpty()) {
+            Random tilePicker = new Random();
+            int[] pos = emptyTiles.get(tilePicker.nextInt(emptyTiles.size()));
+            int row = pos[0];
+            int col = pos[1];
+
+            // ternary operator, places a tile numbered 2 if the
+            // double that is generated is less than 0.9 (90% chance),
+            // otherwise, return 4 if random double is
+            // greater than 0.9 (10% chance)
+            matrix[row][col] = tilePicker.nextDouble() < 0.9 ? 2 : 4;
+        }
+    }
 
     public static void main(String[] args) {
         // create a 4x4 integer matrix
         int[][] matrix = {
-                {4, 0, 0, 0,},
-                {0, 0, 0, 4,},
-                {4, 0, 0, 0,},
-                {0, 2, 2, 0,} };
-
+                {0, 0, 0, 0,},
+                {0, 0, 0, 0,},
+                {0, 0, 0, 0,},
+                {0, 0, 0, 0,} };
+        insertRandomTile(matrix);
         label:
         while (true) {
             System.out.println("This is the current matrix: ");
@@ -174,6 +204,7 @@ public class MatrixTest {
 //            displayColumnsReversed(matrix);
 //            tiltMatrixToLeft(matrix);
 //            tiltMatrixToRight(matrix);
+            insertRandomTile(matrix);
             displayRows(matrix);
             System.out.println("Type 'L' to move matrix to the left or 'R' to move matrix to the right");
             System.out.println("Type 'U' to move matrix to the left or 'D' to move matrix to the right");
@@ -198,7 +229,6 @@ public class MatrixTest {
                     break label;
                 default:
                     System.out.println("Invalid input!");
-                    break;
             }
 
         }
