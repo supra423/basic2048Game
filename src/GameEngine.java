@@ -4,6 +4,9 @@ import javax.swing.*;
 
 public class GameEngine implements ActionListener {
     private final GameControls keyH = new GameControls();
+    static int rows = 4;
+    static int cols = 4;
+    static int[][] matrix = new int[rows][cols];
 
     public GameEngine(JFrame frame) {
         frame.addKeyListener(keyH);

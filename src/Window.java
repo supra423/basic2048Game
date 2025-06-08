@@ -3,8 +3,6 @@ import java.awt.*;
 
 public class Window extends JFrame {
     Board board = new Board();
-    final int rows = 4;
-    final int  col = 4;
     public Window() {
         this.setTitle("2048");
         this.setVisible(true);
@@ -18,10 +16,7 @@ public class Window extends JFrame {
 
         this.add(board);
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < col; j++) {
-                board.add(new Cell());
-            }
-        }
+        board.displayCells();
+
     }
 }
