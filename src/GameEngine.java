@@ -1,57 +1,68 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import javax.swing.*;
 
 public class GameEngine extends Board implements ActionListener {
-//    Board newBoard = new Board();
-//    private static Board board = new Board();
+    private final JFrame frame;
+    private final Board board;
     private final GameControls keyH = new GameControls();
-    static int rows = 4;
-    static int cols = 4;
-//    public static int[][] matrix = new int[rows][cols];
     public static int[][] matrix = {
-        {0, 0, 0, 0},
-        {0, 0, 4, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 2} };
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}};
 
     public GameEngine(JFrame frame) {
-        frame.addKeyListener(keyH);
+        this.frame = frame;
+        this.board = new Board();
+
+        gameEngineUpdate(frame, board);
+
+
         Timer timer = new Timer(10, this);
         timer.start();
-//        this.boardUpdate(matrix);
-//        displayCells(matrix);
-        this.boardUpdate(matrix);
     }
 
-//    public static Board getBoard() {
-//        return board;
-//    }
+    private void gameEngineUpdate(JFrame frame, Board board) {
 
-//    public static void setBoard(Board board) {
-//        GameEngine.board = board;
-//    }
+        frame.addKeyListener(keyH);
+        frame.add(board);
+        board.gameUpdate(matrix);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (keyH.upPressed) {
+            upMove(matrix);
+            insertRandomTile(matrix);
+            gameEngineUpdate(this.frame, this.board);
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
+            downMove(matrix);
+            insertRandomTile(matrix);
+            gameEngineUpdate(this.frame, this.board);
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
-            System.out.println("left");
             leftMove(matrix);
+            insertRandomTile(matrix);
+            gameEngineUpdate(this.frame, this.board);
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
+            rightMove(matrix);
+            insertRandomTile(matrix);
+            gameEngineUpdate(this.frame, this.board);
             keyH.rightPressed = false;
         }
     }
 
+
     private void leftMove(int[][] matrix) {
         for (int[] arr : matrix) {
             int insertTile = 0;
-            int mergeTile = 0;
 
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i] != 0) {
@@ -64,7 +75,7 @@ public class GameEngine extends Board implements ActionListener {
                 insertTile++;
             }
 
-            for (int j = 0; j < arr.length - 1; j++)  {
+            for (int j = 0; j < arr.length - 1; j++) {
                 if (arr[j] != 0 && arr[j] == arr[j + 1]) {
                     arr[j] += arr[j + 1];
                     arr[j + 1] = 0;
@@ -73,33 +84,83 @@ public class GameEngine extends Board implements ActionListener {
         }
     }
 
-    static void displayRows(int[][] matrix) {
-        for (int[] arr : matrix) {
-            for (int j = 0; j < matrix.length; j++) {
-                System.out.print(arr[j] + ", ");
+    private void reverseMatrixHorizontally(int[][] matrix) {
+        int cols = matrix[0].length;
+
+        for (int[] row : matrix) {
+            for (int i = 0; i < cols / 2; i++) {
+                int temp = row[i];
+                row[i] = row[cols - 1 - i];
+                row[cols - 1 - i] = temp;
             }
-            System.out.println();
         }
     }
-//    public void displayCells(int[][] matrix) {
-//        Board newBoard = new Board();
-//        for (int i = 0; i < rows; i++) {
-//            for (int j = 0; j < cols; j++) {
-//                newBoard.add(new Cell(2));
-//            }
-//        }
-//    }
-//
-//    public void boardUpdate(int[][] matrix) {
-//        Board newBoard = new Board();
-//        for (int i = 0; i < rows; i++) {
-//            for (int j = 0; j < cols; j++) {
-//                if (matrix[i][j] != 0) {
-//                    newBoard.add(new Cell(matrix[i][j]));
-//                } else {
-//                    newBoard.add(new Cell());
-//                }
-//            }
-//        }
-//    }
+
+    private void rightMove(int[][] matrix) {
+        reverseMatrixHorizontally(matrix);
+        leftMove(matrix);
+        reverseMatrixHorizontally(matrix);
+    }
+
+    private void tiltMatrixToLeft(int[][] matrix) {
+        int[][] matrixCopy = createMatrixCopy(matrix);
+        reverseMatrixHorizontally(matrixCopy);
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                int[] arr = matrixCopy[j];
+                matrix[i][j] = arr[i];
+            }
+        }
+    }
+
+    private void tiltMatrixToRight(int[][] matrix) {
+        reverseMatrixHorizontally(matrix);
+        tiltMatrixToLeft(matrix);
+        reverseMatrixHorizontally(matrix);
+    }
+
+    private int[][] createMatrixCopy(int[][] matrix) {
+        int[][] matrixCopy = new int[4][4];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                matrixCopy[i][j] = matrix[i][j];
+            }
+        }
+        return matrixCopy;
+    }
+
+    private void upMove(int[][] matrix) {
+        tiltMatrixToLeft(matrix);
+        leftMove(matrix);
+        tiltMatrixToRight(matrix);
+    }
+
+    private void downMove(int[][] matrix) {
+        tiltMatrixToRight(matrix);
+        leftMove(matrix);
+        tiltMatrixToLeft(matrix);
+    }
+
+    private void insertRandomTile(int[][] matrix) {
+
+        List<int[]> emptyTiles = new ArrayList<>();
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (matrix[i][j] == 0) {
+                    emptyTiles.add(new int[]{i, j});
+                }
+            }
+        }
+
+        if (!emptyTiles.isEmpty()) {
+            Random tilePicker = new Random();
+            int[] pos = emptyTiles.get(tilePicker.nextInt(emptyTiles.size()));
+            int row = pos[0];
+            int col = pos[1];
+
+            matrix[row][col] = tilePicker.nextDouble() < 0.9 ? 2 : 4;
+        }
+    }
 }

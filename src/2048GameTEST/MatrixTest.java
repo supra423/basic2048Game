@@ -126,17 +126,10 @@ public class MatrixTest {
     }
 
     static void tiltMatrixToRight(int [][] matrix) {
-        int[][] matrixCopy = createMatrixCopy(matrix);
         reverseMatrixHorizontally(matrix);
         tiltMatrixToLeft(matrix);
         reverseMatrixHorizontally(matrix);
 
-//        for (int i = 0; i < matrix.length; i++) {
-//            for (int j = 0; j < matrix.length; j++) {
-//                int[] arr = matrixCopy[j];
-//                matrix[i][j] = arr[i];
-//            }
-//        }
     }
 
     static int[][] createMatrixCopy(int[][] matrix) {

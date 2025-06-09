@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Cell extends JPanel {
+    static Dimension fixedSize = new Dimension(200, 200);
     private void cellConfiguration(String backgroundColor, String label, String labelColor, int labelSize) {
         this.setBackground(Color.decode(backgroundColor));
         JLabel cellValue = new JLabel(label);
@@ -15,18 +16,28 @@ public class Cell extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
 
+
+
         this.add(cellValue, gbc);
     }
 
     public Cell () {
         this.setBackground(Color.decode("#636262"));
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
-        this.setPreferredSize(new Dimension(200, 200));
+
+        this.setPreferredSize(fixedSize);
+        this.setMinimumSize(fixedSize);
+        this.setMaximumSize(fixedSize);
+
         this.setLayout(new GridBagLayout());
     }
     public Cell (int value) {
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
-        this.setPreferredSize(new Dimension(200, 200));
+
+        this.setPreferredSize(fixedSize);
+        this.setMinimumSize(fixedSize);
+        this.setMaximumSize(fixedSize);
+
         this.setLayout(new GridBagLayout());
 
         if (value == 2) {

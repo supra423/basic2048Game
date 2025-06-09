@@ -9,7 +9,7 @@ public class Board extends JPanel {
     public Board() {
 
         this.setBackground(Color.decode("#a1a1a1"));
-        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
+//        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a")));
         this.setLayout(new GridLayout(4, 4));
         this.setPreferredSize(new Dimension(800, 800));
 //        this.boardUpdate(GameEngine.matrix);
@@ -33,5 +33,13 @@ public class Board extends JPanel {
                 }
             }
         }
+    }
+    public void gameUpdate(int[][] matrix) {
+
+        this.removeAll();
+
+        this.boardUpdate(matrix);
+        this.revalidate();
+        this.repaint();
     }
 }
