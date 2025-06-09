@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Cell extends JPanel {
-    void cellConfiguration(String backgroundColor, String label, String labelColor, int labelSize) {
+    private void cellConfiguration(String backgroundColor, String label, String labelColor, int labelSize) {
         this.setBackground(Color.decode(backgroundColor));
         JLabel cellValue = new JLabel(label);
         cellValue.setForeground(Color.decode(labelColor));
@@ -18,13 +18,13 @@ public class Cell extends JPanel {
         this.add(cellValue, gbc);
     }
 
-    Cell () {
+    public Cell () {
         this.setBackground(Color.decode("#636262"));
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
         this.setPreferredSize(new Dimension(200, 200));
         this.setLayout(new GridBagLayout());
     }
-    Cell (int value) {
+    public Cell (int value) {
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
         this.setPreferredSize(new Dimension(200, 200));
         this.setLayout(new GridBagLayout());

@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
-    Board board = new Board();
     public Window() {
         this.setTitle("2048");
         this.setVisible(true);
@@ -14,9 +13,6 @@ public class Window extends JFrame {
 
         this.pack();
 
-        this.add(board);
-
-        board.displayCells();
-
+//        this.add(board);
     }
 }
