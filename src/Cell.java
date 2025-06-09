@@ -48,11 +48,11 @@ public class Cell extends JPanel {
             cellConfiguration("#f3b178", "8", "#ffffff", 80);
         } else if (value == 16) {
             cellConfiguration("#f59563", "16", "#ffffff", 80);
-        }else if (value == 32) {
+        } else if (value == 32) {
             cellConfiguration("#f67c60", "32", "#ffffff", 80);
         } else if (value == 64) {
             cellConfiguration("#f65e3b", "64", "#ffffff", 80);
-        }else if (value == 128) {
+        } else if (value == 128) {
             cellConfiguration("#ecce73", "128", "#ffffff", 80);
         } else if (value == 256) {
             cellConfiguration("#eccd62", "256", "#ffffff", 80);
@@ -62,6 +62,8 @@ public class Cell extends JPanel {
             cellConfiguration("#edc43e", "1024", "#ffffff", 60);
         } else if (value == 2048) {
             cellConfiguration("#ecc32d", "2048", "#ffffff", 60);
+        } else if (value == 4096) {
+            cellConfiguration("#000000", "4096", "#ffffff", 60);
         }
     }
 }

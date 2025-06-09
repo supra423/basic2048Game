@@ -2,7 +2,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GameControls implements KeyListener {
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, undoPressed;
     private boolean lock = false;
 
     @Override
@@ -30,6 +30,10 @@ public class GameControls implements KeyListener {
         if (code == KeyEvent.VK_RIGHT) {
             rightPressed = true;
         }
+        if (code == KeyEvent.VK_U) {
+            undoPressed = true;
+        }
         lock = true;
     }
 }
+

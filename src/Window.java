@@ -13,6 +13,5 @@ public class Window extends JFrame {
 
         this.pack();
 
-//        this.add(board);
     }
 }

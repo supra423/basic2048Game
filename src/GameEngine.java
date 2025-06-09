@@ -1,19 +1,22 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
 
 public class GameEngine extends Board implements ActionListener {
     private final JFrame frame;
     private final Board board;
     private final GameControls keyH = new GameControls();
-    public static int[][] matrix = {
+    private static int[][] matrix = {
             {0, 0, 0, 0},
             {0, 0, 0, 0},
             {0, 0, 0, 0},
             {0, 0, 0, 0}};
+
+    Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
+    private static boolean canUndo = false;
+
 
     public GameEngine(JFrame frame) {
         this.frame = frame;
@@ -37,25 +40,41 @@ public class GameEngine extends Board implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (keyH.upPressed) {
+            canUndo = true;
+            matrixHistoryStack.push(createMatrixCopy(matrix));
             upMove(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
+            canUndo = true;
+            matrixHistoryStack.push(createMatrixCopy(matrix));
             downMove(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
+            canUndo = true;
+            matrixHistoryStack.push(createMatrixCopy(matrix));
             leftMove(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
+            canUndo = true;
+            matrixHistoryStack.push(createMatrixCopy(matrix));
             rightMove(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.rightPressed = false;
+        } else if (keyH.undoPressed) {
+            if (canUndo && !matrixHistoryStack.isEmpty()) {
+//                previousMatrix = createMatrixCopy(matrixHistoryStack.peek());
+                matrix = createMatrixCopy(matrixHistoryStack.peek());
+                board.gameUpdate(matrix);
+            }
+            canUndo = false;
+            keyH.undoPressed = false;
         }
     }
 
@@ -123,9 +142,7 @@ public class GameEngine extends Board implements ActionListener {
     private int[][] createMatrixCopy(int[][] matrix) {
         int[][] matrixCopy = new int[4][4];
         for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
-                matrixCopy[i][j] = matrix[i][j];
-            }
+            System.arraycopy(matrix[i], 0, matrixCopy[i], 0, matrix[i].length);
         }
         return matrixCopy;
     }

@@ -5,10 +5,5 @@ public class Main {
         GameEngine newGame = new GameEngine(mainWindow);
         mainWindow.add(newGame);
 
-//        mainWindow.pack();
-
-//        Board newBoard = new Board();
-//        GameEngine newGame = new GameEngine();
-//        GameEngine.getBoard();
     }
 }

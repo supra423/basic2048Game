@@ -9,19 +9,10 @@ public class Board extends JPanel {
     public Board() {
 
         this.setBackground(Color.decode("#a1a1a1"));
-//        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a")));
         this.setLayout(new GridLayout(4, 4));
         this.setPreferredSize(new Dimension(800, 800));
-//        this.boardUpdate(GameEngine.matrix);
 
     }
-//    public void displayCells() {
-//        for (int i = 0; i < rows; i++) {
-//            for (int j = 0; j < cols; j++) {
-//                this.add(new Cell(4));
-//            }
-//        }
-//    }
 
     public void boardUpdate(int[][] matrix) {
         for (int i = 0; i < rows; i++) {
