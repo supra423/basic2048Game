@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-
-public class Cell extends JPanel {
+// contains textures for each tile
+public class Tile extends JPanel {
     static Dimension fixedSize = new Dimension(200, 200);
     private void cellConfiguration(String backgroundColor, String label, String labelColor, int labelSize) {
         this.setBackground(Color.decode(backgroundColor));
@@ -21,7 +21,7 @@ public class Cell extends JPanel {
         this.add(cellValue, gbc);
     }
 
-    public Cell () {
+    public Tile() {
         this.setBackground(Color.decode("#636262"));
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
 
@@ -31,7 +31,7 @@ public class Cell extends JPanel {
 
         this.setLayout(new GridBagLayout());
     }
-    public Cell (int value) {
+    public Tile(int value) {
         this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
 
         this.setPreferredSize(fixedSize);

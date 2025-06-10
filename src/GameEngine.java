@@ -4,7 +4,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
-public class GameEngine extends Board implements ActionListener {
+public class GameEngine implements ActionListener {
     private final JFrame frame;
     private final Board board;
     private final GameControls keyH = new GameControls();
@@ -15,9 +15,9 @@ public class GameEngine extends Board implements ActionListener {
             {0, 0, 0, 0},
             {0, 0, 0, 0} };
 
-    Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
+    private final Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
     private static boolean canUndo = false;
-    int[][] copyOfMatrix; // this will be used to check if there were
+    private int[][] copyOfMatrix; // this will be used to check if there were
                           // any movements made, if no moves were made, then
                           // this will prevent a tile from being randomly generated
 
@@ -95,19 +95,24 @@ public class GameEngine extends Board implements ActionListener {
             keyH.rightPressed = false;
 
         } else if (keyH.undoPressed) {
+
             if (canUndo && !matrixHistoryStack.isEmpty()) {
                 matrix = createMatrixCopy(matrixHistoryStack.peek());
                 board.gameUpdate(matrix);
+
             } else if (!didPlayerMakeMove() && !matrixHistoryStack.isEmpty()) {
                 matrixHistoryStack.pop();
+
                 if (matrixHistoryStack.peek() != null) {
                     matrix = createMatrixCopy(matrixHistoryStack.peek());
                     board.gameUpdate(matrix);
                 }
+
             } else if (matrixHistoryStack.isEmpty()) {
                 matrix = copyOfMatrix;
                 board.gameUpdate(matrix);
             }
+
                 canUndo = false;
                 keyH.undoPressed = false;
         }
