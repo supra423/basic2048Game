@@ -64,6 +64,10 @@ public class Cell extends JPanel {
             cellConfiguration("#ecc32d", "2048", "#ffffff", 60);
         } else if (value == 4096) {
             cellConfiguration("#000000", "4096", "#ffffff", 60);
+        } else if (value == 8192) {
+            cellConfiguration("#000000", "8192", "#ffffff", 60);
+        } else if (value == 16384) {
+            cellConfiguration("#000000", "16384", "#ffffff", 60);
         }
     }
 }

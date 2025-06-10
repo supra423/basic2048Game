@@ -9,23 +9,29 @@ public class GameEngine extends Board implements ActionListener {
     private final Board board;
     private final GameControls keyH = new GameControls();
     private static int[][] matrix = {
+            // you can change the values inside the matrix to preload squares for testing/debugging
             {0, 0, 0, 0},
             {0, 0, 0, 0},
             {0, 0, 0, 0},
-            {0, 0, 0, 0}};
+            {0, 0, 0, 0} };
 
     Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
     private static boolean canUndo = false;
+    int[][] copyOfMatrix; // this will be used to check if there were
+                          // any movements made, if no moves were made, then
+                          // this will prevent a tile from being randomly generated
 
 
     public GameEngine(JFrame frame) {
         this.frame = frame;
         this.board = new Board();
 
+        insertStartingTiles(matrix); // if you are changing the values inside the matrix,
+        insertStartingTiles(matrix); // might as well comment out both these lines.
         gameEngineUpdate(frame, board);
+        matrixHistoryStack.push(matrix);
 
-
-        Timer timer = new Timer(10, this);
+        Timer timer = new Timer(50, this);
         timer.start();
     }
 
@@ -41,58 +47,76 @@ public class GameEngine extends Board implements ActionListener {
 
         if (keyH.upPressed) {
             canUndo = true;
-            matrixHistoryStack.push(createMatrixCopy(matrix));
+
+            if (didPlayerMakeMove()) {
+                matrixHistoryStack.push(createMatrixCopy(matrix));
+            }
+
             upMove(matrix);
+            copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
             canUndo = true;
-            matrixHistoryStack.push(createMatrixCopy(matrix));
+
+            if (didPlayerMakeMove()) {
+                matrixHistoryStack.push(createMatrixCopy(matrix));
+            }
+
             downMove(matrix);
+            copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
             canUndo = true;
-            matrixHistoryStack.push(createMatrixCopy(matrix));
+
+            if (didPlayerMakeMove()) {
+                matrixHistoryStack.push(createMatrixCopy(matrix));
+            }
+
             leftMove(matrix);
+            copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
             canUndo = true;
-            matrixHistoryStack.push(createMatrixCopy(matrix));
+
+            if (didPlayerMakeMove()) {
+                matrixHistoryStack.push(createMatrixCopy(matrix));
+            }
+
             rightMove(matrix);
+            copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
             gameEngineUpdate(this.frame, this.board);
             keyH.rightPressed = false;
+
         } else if (keyH.undoPressed) {
             if (canUndo && !matrixHistoryStack.isEmpty()) {
-//                previousMatrix = createMatrixCopy(matrixHistoryStack.peek());
                 matrix = createMatrixCopy(matrixHistoryStack.peek());
                 board.gameUpdate(matrix);
+            } else if (!didPlayerMakeMove() && !matrixHistoryStack.isEmpty()) {
+                matrixHistoryStack.pop();
+                if (matrixHistoryStack.peek() != null) {
+                    matrix = createMatrixCopy(matrixHistoryStack.peek());
+                    board.gameUpdate(matrix);
+                }
+            } else if (matrixHistoryStack.isEmpty()) {
+                matrix = copyOfMatrix;
+                board.gameUpdate(matrix);
             }
-            canUndo = false;
-            keyH.undoPressed = false;
+                canUndo = false;
+                keyH.undoPressed = false;
         }
     }
 
 
     private void leftMove(int[][] matrix) {
         for (int[] arr : matrix) {
-            int insertTile = 0;
-
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] != 0) {
-                    arr[insertTile] = arr[i];
-                    insertTile++;
-                }
-            }
-            while (insertTile < arr.length) {
-                arr[insertTile] = 0;
-                insertTile++;
-            }
+            moveTilesAndReplaceWithZero(arr);
 
             for (int j = 0; j < arr.length - 1; j++) {
                 if (arr[j] != 0 && arr[j] == arr[j + 1]) {
@@ -100,6 +124,24 @@ public class GameEngine extends Board implements ActionListener {
                     arr[j + 1] = 0;
                 }
             }
+
+            moveTilesAndReplaceWithZero(arr);
+        }
+    }
+
+    private void moveTilesAndReplaceWithZero(int[] arr) {
+
+        int insertTile = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != 0) {
+                arr[insertTile] = arr[i];
+                insertTile++;
+            }
+        }
+        while (insertTile < arr.length) {
+            arr[insertTile] = 0;
+            insertTile++;
         }
     }
 
@@ -160,7 +202,11 @@ public class GameEngine extends Board implements ActionListener {
     }
 
     private void insertRandomTile(int[][] matrix) {
-
+        if (didPlayerMakeMove()) {
+            insertStartingTiles(matrix);
+        }
+    }
+    private void insertStartingTiles(int[][] matrix) {
         List<int[]> emptyTiles = new ArrayList<>();
 
         for (int i = 0; i < matrix.length; i++) {
@@ -179,5 +225,8 @@ public class GameEngine extends Board implements ActionListener {
 
             matrix[row][col] = tilePicker.nextDouble() < 0.9 ? 2 : 4;
         }
+    }
+    private boolean didPlayerMakeMove() {
+        return !Arrays.deepEquals(copyOfMatrix, matrixHistoryStack.peek());
     }
 }
