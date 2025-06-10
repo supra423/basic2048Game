@@ -35,6 +35,8 @@ public class Window extends JFrame {
     }
 
     public void add(GameEngine newGame) {
-
+        // i have no fucking clue but IntelliJ suggests
+        // me to do this, for some reasons it actually
+        // solves my problem lmao
     }
 }
