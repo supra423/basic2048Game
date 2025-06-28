@@ -48,7 +48,7 @@ public class GameEngine implements ActionListener {
         if (keyH.upPressed) {
             canUndo = true;
 
-            if (didPlayerMakeMove()) {
+            if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
 
@@ -60,7 +60,7 @@ public class GameEngine implements ActionListener {
         } else if (keyH.downPressed) {
             canUndo = true;
 
-            if (didPlayerMakeMove()) {
+            if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
 
@@ -72,7 +72,7 @@ public class GameEngine implements ActionListener {
         } else if (keyH.leftPressed) {
             canUndo = true;
 
-            if (didPlayerMakeMove()) {
+            if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
 
@@ -84,7 +84,7 @@ public class GameEngine implements ActionListener {
         } else if (keyH.rightPressed) {
             canUndo = true;
 
-            if (didPlayerMakeMove()) {
+            if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
 
@@ -96,23 +96,22 @@ public class GameEngine implements ActionListener {
 
         } else if (keyH.undoPressed) {
 
-            if (canUndo && !matrixHistoryStack.isEmpty()) {
-                matrix = createMatrixCopy(matrixHistoryStack.peek());
+            if (matrixHistoryStack.isEmpty()) {
+                matrix = copyOfMatrix;
                 board.gameUpdate(matrix);
-
-            } else if (!didPlayerMakeMove() && !matrixHistoryStack.isEmpty()) {
+            }
+            else if (!didBoardChanged() && !matrixHistoryStack.isEmpty()) {
+                // if player made a move but the board did not change
                 matrixHistoryStack.pop();
-
                 if (matrixHistoryStack.peek() != null) {
                     matrix = createMatrixCopy(matrixHistoryStack.peek());
                     board.gameUpdate(matrix);
                 }
-
-            } else if (matrixHistoryStack.isEmpty()) {
-                matrix = copyOfMatrix;
+            }
+            else if (canUndo && !matrixHistoryStack.isEmpty()) {
+                matrix = createMatrixCopy(matrixHistoryStack.peek());
                 board.gameUpdate(matrix);
             }
-
                 canUndo = false;
                 keyH.undoPressed = false;
         }
@@ -207,7 +206,7 @@ public class GameEngine implements ActionListener {
     }
 
     private void insertRandomTile(int[][] matrix) {
-        if (didPlayerMakeMove()) {
+        if (didBoardChanged()) {
             insertStartingTiles(matrix);
         }
     }
@@ -231,7 +230,7 @@ public class GameEngine implements ActionListener {
             matrix[row][col] = tilePicker.nextDouble() < 0.9 ? 2 : 4;
         }
     }
-    private boolean didPlayerMakeMove() {
+    private boolean didBoardChanged() {
         return !Arrays.deepEquals(copyOfMatrix, matrixHistoryStack.peek());
     }
 }

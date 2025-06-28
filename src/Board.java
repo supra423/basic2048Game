@@ -14,7 +14,7 @@ public class Board extends JPanel {
 
     }
 
-    public void boardUpdate(int[][] matrix) {
+    public void tileUpdate(int[][] matrix) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (matrix[i][j] != 0) {
@@ -29,7 +29,7 @@ public class Board extends JPanel {
 
         this.removeAll();
 
-        this.boardUpdate(matrix);
+        this.tileUpdate(matrix);
         this.revalidate();
         this.repaint();
     }
