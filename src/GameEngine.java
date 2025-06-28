@@ -9,6 +9,9 @@ public class GameEngine implements ActionListener {
     private final Board board;
     private final GameControls keyH = new GameControls();
     private static int[][] matrix = {
+            // this right here is literally the board, kinda amazes me that the game is basically
+            // just a data structure, specifically, a 2-Dimensional Array or Matrix
+            // this is why you learn your Data Structures ;)
             // you can change the values inside the matrix to preload squares for testing/debugging
             {0, 0, 0, 0},
             {0, 0, 0, 0},
@@ -18,7 +21,7 @@ public class GameEngine implements ActionListener {
     private final Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
     private static boolean canUndo = false;
     private int[][] copyOfMatrix; // this will be used to check if there were
-                          // any movements made, if no moves were made, then
+                          // any movements made. If no moves were made, then
                           // this will prevent a tile from being randomly generated
 
 
@@ -28,23 +31,22 @@ public class GameEngine implements ActionListener {
 
         insertStartingTiles(matrix); // if you are changing the values inside the matrix,
         insertStartingTiles(matrix); // might as well comment out both these lines.
-        gameEngineUpdate(frame, board);
+        gameUpdate(frame, board);
         matrixHistoryStack.push(matrix);
 
-        Timer timer = new Timer(50, this);
+        Timer timer = new Timer(17, this);
         timer.start();
     }
 
-    private void gameEngineUpdate(JFrame frame, Board board) {
+    private void gameUpdate(JFrame frame, Board board) {
 
         frame.addKeyListener(keyH);
         frame.add(board);
-        board.gameUpdate(matrix);
+        board.boardUpdate(matrix);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-
+    final public void actionPerformed(ActionEvent e) {
         if (keyH.upPressed) {
             canUndo = true;
 
@@ -55,7 +57,7 @@ public class GameEngine implements ActionListener {
             upMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameEngineUpdate(this.frame, this.board);
+            gameUpdate(this.frame, this.board);
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
             canUndo = true;
@@ -67,7 +69,7 @@ public class GameEngine implements ActionListener {
             downMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameEngineUpdate(this.frame, this.board);
+            gameUpdate(this.frame, this.board);
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
             canUndo = true;
@@ -79,7 +81,7 @@ public class GameEngine implements ActionListener {
             leftMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameEngineUpdate(this.frame, this.board);
+            gameUpdate(this.frame, this.board);
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
             canUndo = true;
@@ -91,26 +93,24 @@ public class GameEngine implements ActionListener {
             rightMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameEngineUpdate(this.frame, this.board);
+            gameUpdate(this.frame, this.board);
             keyH.rightPressed = false;
 
         } else if (keyH.undoPressed) {
 
             if (matrixHistoryStack.isEmpty()) {
                 matrix = copyOfMatrix;
-                board.gameUpdate(matrix);
-            }
-            else if (!didBoardChanged() && !matrixHistoryStack.isEmpty()) {
+                board.boardUpdate(matrix);
+            } else if (!didBoardChanged() && !matrixHistoryStack.isEmpty()) {
                 // if player made a move but the board did not change
                 matrixHistoryStack.pop();
                 if (matrixHistoryStack.peek() != null) {
                     matrix = createMatrixCopy(matrixHistoryStack.peek());
-                    board.gameUpdate(matrix);
+                    board.boardUpdate(matrix);
                 }
-            }
-            else if (canUndo && !matrixHistoryStack.isEmpty()) {
+            } else if (canUndo && !matrixHistoryStack.isEmpty()) {
                 matrix = createMatrixCopy(matrixHistoryStack.peek());
-                board.gameUpdate(matrix);
+                board.boardUpdate(matrix);
             }
                 canUndo = false;
                 keyH.undoPressed = false;

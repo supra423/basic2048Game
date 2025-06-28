@@ -25,12 +25,11 @@ public class Board extends JPanel {
             }
         }
     }
-    public void gameUpdate(int[][] matrix) {
+    public void boardUpdate(int[][] matrix) {
 
         this.removeAll();
 
         this.tileUpdate(matrix);
         this.revalidate();
-        this.repaint();
     }
 }
