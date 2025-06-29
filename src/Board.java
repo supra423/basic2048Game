@@ -31,5 +31,6 @@ public class Board extends JPanel {
 
         this.tileUpdate(matrix);
         this.revalidate();
+        this.repaint();
     }
 }
