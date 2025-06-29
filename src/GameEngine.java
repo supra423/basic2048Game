@@ -4,19 +4,30 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
-public class GameEngine implements ActionListener {
+public class GameEngine extends JPanel implements ActionListener {
     private final JFrame frame;
-    private final Board board;
+    public static Board board = new Board();
     private final GameControls keyH = new GameControls();
-    private static int[][] matrix = {
-            // this right here is literally the board, kinda amazes me that the game is basically
-            // just a data structure, specifically, a 2-Dimensional Array or Matrix
-            // this is why you learn your Data Structures ;)
-            // you can change the values inside the matrix to preload squares for testing/debugging
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0} };
+
+//    if you want to preload squares for testing/debugging, do these:
+//    uncomment lines 17 - 25
+//    set both the values of rows and cols to 4
+//    and comment out line 30
+
+//    public static int[][] matrix = {
+//            // this right here is literally the board, kinda amazes me that the game is basically
+//            // just a data structure, specifically, a 2-Dimensional Array or Matrix
+//            // this is why you learn your Data Structures ;)
+//            // you can change the values inside the matrix to preload squares for testing/debugging
+//            {0, 0, 0, 0},
+//            {0, 0, 0, 0},
+//            {0, 0, 0, 0},
+//            {0, 0, 0, 0} };
+
+    final public static int rows = 6;
+    final public static int cols = 6;
+
+    public static int[][] matrix = new int[rows][cols];
 
     private final Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
     private static boolean canUndo = false;
@@ -24,14 +35,16 @@ public class GameEngine implements ActionListener {
                           // any movements made. If no moves were made, then
                           // this will prevent a tile from being randomly generated
 
+    public static int score = 0;
+//    private static int scoreEarned = 0;
+    private final Deque<Integer> scoreHistoryStack = new ArrayDeque<>();
 
     public GameEngine(JFrame frame) {
         this.frame = frame;
-        this.board = new Board();
 
         insertStartingTiles(matrix); // if you are changing the values inside the matrix,
         insertStartingTiles(matrix); // might as well comment out both these lines.
-        gameUpdate(frame, board);
+        gameUpdate(this.frame, board);
         matrixHistoryStack.push(matrix);
 
         Timer timer = new Timer(17, this);
@@ -41,7 +54,7 @@ public class GameEngine implements ActionListener {
     private void gameUpdate(JFrame frame, Board board) {
 
         frame.addKeyListener(keyH);
-        frame.add(board);
+//        frame.add(board);
         board.boardUpdate(matrix);
     }
 
@@ -57,7 +70,7 @@ public class GameEngine implements ActionListener {
             upMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameUpdate(this.frame, this.board);
+            gameUpdate(this.frame, board);
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
             canUndo = true;
@@ -69,7 +82,7 @@ public class GameEngine implements ActionListener {
             downMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameUpdate(this.frame, this.board);
+            gameUpdate(this.frame, board);
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
             canUndo = true;
@@ -81,7 +94,7 @@ public class GameEngine implements ActionListener {
             leftMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameUpdate(this.frame, this.board);
+            gameUpdate(this.frame, board);
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
             canUndo = true;
@@ -93,7 +106,7 @@ public class GameEngine implements ActionListener {
             rightMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
-            gameUpdate(this.frame, this.board);
+            gameUpdate(this.frame, board);
             keyH.rightPressed = false;
 
         } else if (keyH.undoPressed) {
@@ -111,6 +124,13 @@ public class GameEngine implements ActionListener {
             } else if (canUndo && !matrixHistoryStack.isEmpty()) {
                 matrix = createMatrixCopy(matrixHistoryStack.peek());
                 board.boardUpdate(matrix);
+
+                if (scoreHistoryStack.size() > 1) {
+                    scoreHistoryStack.pop();
+                    score = scoreHistoryStack.peek();
+                } else {
+                    score -= scoreHistoryStack.pop();
+                }
             }
                 canUndo = false;
                 keyH.undoPressed = false;
@@ -126,11 +146,20 @@ public class GameEngine implements ActionListener {
                 if (arr[j] != 0 && arr[j] == arr[j + 1]) {
                     arr[j] += arr[j + 1];
                     arr[j + 1] = 0;
+//                    scoreEarned = arr[j] + arr[j + 1];
+                        if (didBoardChanged()) {
+                            score += arr[j];
+//                            score += scoreEarned;
+                    }
+//                    scoreEarned = 0;
                 }
             }
 
             moveTilesAndReplaceWithZero(arr);
         }
+        scoreHistoryStack.push(score);
+//        System.out.println(scoreHistoryStack.peek());
+        System.out.println(score);
     }
 
     private void moveTilesAndReplaceWithZero(int[] arr) {
@@ -186,7 +215,7 @@ public class GameEngine implements ActionListener {
     }
 
     private int[][] createMatrixCopy(int[][] matrix) {
-        int[][] matrixCopy = new int[4][4];
+        int[][] matrixCopy = new int[rows][cols];
         for (int i = 0; i < matrix.length; i++) {
             System.arraycopy(matrix[i], 0, matrixCopy[i], 0, matrix[i].length);
         }

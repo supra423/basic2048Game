@@ -2,26 +2,31 @@ import javax.swing.*;
 import java.awt.*;
 // contains textures for each tile
 public class Tile extends JPanel {
-    static Dimension fixedSize = new Dimension(200, 200);
+
+    final private static int tileHeight = Board.boardWidth / GameEngine.rows;
+    final private static int tileWidth = Board.boardWidth / GameEngine.cols;
+    final private static Dimension fixedSize = new Dimension(tileWidth, tileHeight);
+
     private void cellConfiguration(String backgroundColor, String label, String labelColor, int labelSize) {
         this.setBackground(Color.decode(backgroundColor));
         final JLabel cellValue = new JLabel(label);
         cellValue.setForeground(Color.decode(labelColor));
+
+//        final private int autoScaleLabelSize =
+
+
         cellValue.setFont(new Font("Arial", Font.BOLD, labelSize));
 
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-
-        this.add(cellValue, gbc);
+        this.add(cellValue);
     }
+
+//    private int autoScalelabelSize(String labelToResize) {
+//
+//    }
 
     public Tile() {
         this.setBackground(Color.decode("#636262"));
-        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
+        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a")));
 
         this.setPreferredSize(fixedSize);
         this.setMinimumSize(fixedSize);
@@ -31,7 +36,7 @@ public class Tile extends JPanel {
     }
     public Tile(int value) {
         final String stringValue = Integer.toString(value);
-        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a"), 10));
+        this.setBorder(BorderFactory.createLineBorder(Color.decode("#7d7a7a")));
 
         this.setPreferredSize(fixedSize);
         this.setMinimumSize(fixedSize);
@@ -48,7 +53,7 @@ public class Tile extends JPanel {
         } else if (value == 16) {
             cellConfiguration("#f59563", stringValue, "#ffffff", 80);
         } else if (value == 32) {
-            cellConfiguration("#f67c60", stringValue, "#ffffff", 79);
+            cellConfiguration("#f67c60", stringValue, "#ffffff", 80);
         } else if (value == 64) {
             cellConfiguration("#f65e3b", stringValue, "#ffffff", 80);
         } else if (value == 128) {

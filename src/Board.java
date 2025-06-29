@@ -3,20 +3,21 @@ import java.awt.*;
 
 
 public class Board extends JPanel {
-    final static int rows = 4;
-    final static int cols = 4;
+    final private static int boardRows = GameEngine.rows;
+    final private static int boardCols = GameEngine.cols;
+    final public static int boardHeight = 800;
+    final public static int boardWidth = 800;
 
     public Board() {
-
-        this.setBackground(Color.decode("#ffffff"));
-        this.setLayout(new GridLayout(4, 4));
-        this.setPreferredSize(new Dimension(800, 800));
+        this.setBackground(Color.decode("#424242"));
+        this.setLayout(new GridLayout(boardRows, boardCols));
+        this.setPreferredSize(new Dimension(boardHeight, boardWidth));
 
     }
 
     public void tileUpdate(int[][] matrix) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < boardRows; i++) {
+            for (int j = 0; j < boardCols; j++) {
                 if (matrix[i][j] != 0) {
                     this.add(new Tile(matrix[i][j]));
                 } else {
