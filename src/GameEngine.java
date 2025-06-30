@@ -62,11 +62,9 @@ public class GameEngine extends JPanel implements ActionListener {
     final public void actionPerformed(ActionEvent e) {
         if (keyH.upPressed) {
             canUndo = true;
-
             if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
-
             upMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
@@ -74,11 +72,9 @@ public class GameEngine extends JPanel implements ActionListener {
             keyH.upPressed = false;
         } else if (keyH.downPressed) {
             canUndo = true;
-
             if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
-
             downMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
@@ -86,11 +82,9 @@ public class GameEngine extends JPanel implements ActionListener {
             keyH.downPressed = false;
         } else if (keyH.leftPressed) {
             canUndo = true;
-
             if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
-
             leftMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
@@ -98,11 +92,9 @@ public class GameEngine extends JPanel implements ActionListener {
             keyH.leftPressed = false;
         } else if (keyH.rightPressed) {
             canUndo = true;
-
             if (didBoardChanged()) {
                 matrixHistoryStack.push(createMatrixCopy(matrix));
             }
-
             rightMove(matrix);
             copyOfMatrix = createMatrixCopy(matrix);
             insertRandomTile(matrix);
@@ -131,12 +123,12 @@ public class GameEngine extends JPanel implements ActionListener {
                 } else {
                     score -= scoreHistoryStack.pop();
                 }
+                Window.updateScoreLabel(Window.scoreLabel);
             }
                 canUndo = false;
                 keyH.undoPressed = false;
         }
     }
-
 
     private void leftMove(int[][] matrix) {
         for (int[] arr : matrix) {
@@ -146,20 +138,15 @@ public class GameEngine extends JPanel implements ActionListener {
                 if (arr[j] != 0 && arr[j] == arr[j + 1]) {
                     arr[j] += arr[j + 1];
                     arr[j + 1] = 0;
-//                    scoreEarned = arr[j] + arr[j + 1];
                         if (didBoardChanged()) {
                             score += arr[j];
-//                            score += scoreEarned;
+                            Window.updateScoreLabel(Window.scoreLabel);
                     }
-//                    scoreEarned = 0;
                 }
             }
-
             moveTilesAndReplaceWithZero(arr);
         }
         scoreHistoryStack.push(score);
-//        System.out.println(scoreHistoryStack.peek());
-        System.out.println(score);
     }
 
     private void moveTilesAndReplaceWithZero(int[] arr) {

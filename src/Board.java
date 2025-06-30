@@ -12,7 +12,6 @@ public class Board extends JPanel {
         this.setBackground(Color.decode("#424242"));
         this.setLayout(new GridLayout(boardRows, boardCols));
         this.setPreferredSize(new Dimension(boardHeight, boardWidth));
-
     }
 
     public void tileUpdate(int[][] matrix) {
