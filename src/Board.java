@@ -3,8 +3,8 @@ import java.awt.*;
 
 
 public class Board extends JPanel {
-    final private static int boardRows = GameEngine.rows;
-    final private static int boardCols = GameEngine.cols;
+    final private static int boardRows = GameEngine.matrixRows;
+    final private static int boardCols = GameEngine.matrixCols;
     final public static int boardHeight = 800;
     final public static int boardWidth = 800;
 

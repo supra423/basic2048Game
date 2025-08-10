@@ -24,10 +24,10 @@ public class GameEngine extends JPanel implements ActionListener {
 //            {0, 0, 0, 0},
 //            {0, 0, 0, 0} };
 
-    final public static int rows = 6;
-    final public static int cols = 6;
+    final public static int matrixRows = 4;
+    final public static int matrixCols = 4;
 
-    public static int[][] matrix = new int[rows][cols];
+    public static int[][] matrix = new int[matrixRows][matrixCols];
 
     private final Deque<int[][]> matrixHistoryStack = new ArrayDeque<>();
     private static boolean canUndo = false;
@@ -166,13 +166,13 @@ public class GameEngine extends JPanel implements ActionListener {
     }
 
     private void reverseMatrixHorizontally(int[][] matrix) {
-        int cols = matrix[0].length;
-
+//        int matrixCols = matrix[0].length;
+//
         for (int[] row : matrix) {
-            for (int i = 0; i < cols / 2; i++) {
+            for (int i = 0; i < matrixCols / 2; i++) {
                 int temp = row[i];
-                row[i] = row[cols - 1 - i];
-                row[cols - 1 - i] = temp;
+                row[i] = row[matrixCols - 1 - i];
+                row[matrixCols - 1 - i] = temp;
             }
         }
     }
@@ -187,8 +187,8 @@ public class GameEngine extends JPanel implements ActionListener {
         int[][] matrixCopy = createMatrixCopy(matrix);
         reverseMatrixHorizontally(matrixCopy);
 
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
+        for (int i = 0; i < matrixRows; i++) {
+            for (int j = 0; j < matrixCols; j++) {
                 int[] arr = matrixCopy[j];
                 matrix[i][j] = arr[i];
             }
@@ -202,7 +202,7 @@ public class GameEngine extends JPanel implements ActionListener {
     }
 
     private int[][] createMatrixCopy(int[][] matrix) {
-        int[][] matrixCopy = new int[rows][cols];
+        int[][] matrixCopy = new int[matrixRows][matrixCols];
         for (int i = 0; i < matrix.length; i++) {
             System.arraycopy(matrix[i], 0, matrixCopy[i], 0, matrix[i].length);
         }
@@ -229,8 +229,8 @@ public class GameEngine extends JPanel implements ActionListener {
     private void insertStartingTiles(int[][] matrix) {
         List<int[]> emptyTiles = new ArrayList<>();
 
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
+        for (int i = 0; i < matrixRows; i++) {
+            for (int j = 0; j < matrixCols; j++) {
                 if (matrix[i][j] == 0) {
                     emptyTiles.add(new int[]{i, j});
                 }
