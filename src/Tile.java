@@ -55,7 +55,6 @@ public class Tile extends JPanel {
             case 1024 -> cellConfiguration("#edc43e", stringValue, "#ffffff", mediumFont);
             case 2048 -> cellConfiguration("#ecc32d", stringValue, "#ffffff", mediumFont);
             default -> cellConfiguration("#000000", stringValue, "#ffffff", smallFont);
-
         }
     }
 }
